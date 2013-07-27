@@ -31,37 +31,56 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h2>
+<a name="background" class="anchor" href="#background"><span class="octicon octicon-link"></span></a>Background</h2>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>Hadoop is one of the most high-profile and well known open-source projects for distributed systems, being used on a daily basis by some of the largest technology and Internet companies such as Google and Microsoft. Yahoo! successfully used it rebuild their search indexes and in 2008, Hadoop broke the world record to become the fastest system to sort a terabyte of data, doing so in just under 3.5 minutes.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<p>A major design decision in the MapReduce philosophy was to be able to best utilise commodity hardware and not need high performance computers. At over 178,000 lines of code and over 5,000 Java classes, the complexity and vastness of Hadoop has led it to be described as an "alien language".</p>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>A MapReduce job consists of three stages - Map, Shuffle and Reduce. A canonical example of using this paradigm is to count the repetition of words in a document. The stages perform the following operations:</p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<p><code>Map</code> - servers read the input data provided and output a set of (key, value) pairs.</p>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p><code>Shuffle</code> - intermediate results are distributed across all other servers, such that all keys falling in a given range end up on the same server.</p>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<p><code>Reduce</code> - all values for a given key are aggregated and a final result is generated.</p>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<h2>
+<a name="history" class="anchor" href="#history"><span class="octicon octicon-link"></span></a>History</h2>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<p>Visco spawned from an MSc Computing Science group project at <a href="http://www3.imperial.ac.uk/">Imperial College London</a> put forward by <a href="http://research.microsoft.com/en-us/um/people/pcosta/">Dr. Paolo Costa</a>. </p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<h2>
+<a name="collaborators" class="anchor" href="#collaborators"><span class="octicon octicon-link"></span></a>Collaborators</h2>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<p>Akram Hussein (<a href="https://github.com/ahussein" class="user-mention">@ahussein</a>), Alexandros Milaios, Andreas Williams (<a href="https://github.com/agouil" class="user-mention">@agouil</a>), Emmanouil Matsis (<a href="https://github.com/emmanouilmatsis" class="user-mention">@emmanouilmatsis</a>), Jason Fong, Pavlos Mitsoulis-Ntompos (<a href="https://github.com/pm3310" class="user-mention">@pm3310</a>) and Konstantinos Kloudas (<a href="https://github.com/kl0u" class="user-mention">@kl0u</a>) (external).</p>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<h2>
+<a name="objective" class="anchor" href="#objective"><span class="octicon octicon-link"></span></a>Objective</h2>
+
+<p>To introduce new functionality to the Hadoop codebase (version 1.0.1) that would enable the Map tasks that are completed to be immediately passed to the Reduce stage as opposed to the current method which can only pass 5 tasks at a time. This causes much of the data to be spilled on to disk if the memory is full, a costly performance drawback. Effectively, an overlap of the Shuffle and Reduce stages will occur, therefore delivering a faster runtime and improved network load balancing from the reduced transfer of data across the network.</p>
+
+<h2>
+<a name="design" class="anchor" href="#design"><span class="octicon octicon-link"></span></a>Design</h2>
+
+<p>In order to improve the overall performance of the framework it was necessary to implement a data structure that could aggregate results in a parallel fashion. It was decided that a merging binary tree data structure would be used and integrated in to the Map and Reduce stages adding a new phase in both of them. </p>
+
+<blockquote>
+<p>Visco Merging Tree</p>
+</blockquote>
+
+<p><img src="https://raw.github.com/akramhussein/visco/gh-pages/images/merging-tree.png" alt="Visco Merging Tree"></p>
+
+<p>The first part of this new phase takes part after the completion of the map task; merging the various map outputs on the same key and storing these partial results on disk. The reduce tasks, then pull the partial outputs from the different map tasks, which are then merged again on the same key, and are processed by the reduce function as long as they are merged. </p>
+
+<p>Thus, the Reduce and the Merging phase can run concurrently and more efficiently as there is no need to wait for the traditional Shuffle-Sort phase to complete and then begin the reduce computation. With this addition, we also achieve more efficient computation times, because as long as the Map phase is completed the intermediate data can be almost directly fed in the reduce function without waiting for the Shuffle- Sort phase to finish, which in some cases adds significant delay to the execution time, as argued above.</p>
+
+<blockquote>
+<p>Visco Pipeline</p>
+</blockquote>
+
+<p><img src="https://raw.github.com/akramhussein/visco/gh-pages/images/nodes.png" alt="Visco Pipeline"></p>
       </section>
     </div>
 
