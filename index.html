@@ -1,33 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Visco by akramhussein</title>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Visco : Hadoop with a modified framework to allow for concurrent execution of the Shuffle and Reduce phases." />
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Visco</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Visco</h1>
-        <p>Hadoop with a modified framework to allow for concurrent execution of the Shuffle and Reduce phases.</p>
 
-        <p class="view"><a href="https://github.com/akramhussein/visco">View the Project on GitHub <small>akramhussein/visco</small></a></p>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/akramhussein/visco">View on GitHub</a>
 
+          <h1 id="project_title">Visco</h1>
+          <h2 id="project_tagline">Hadoop with a modified framework to allow for concurrent execution of the Shuffle and Reduce phases.</h2>
 
-        <ul>
-          <li><a href="https://github.com/akramhussein/visco/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/akramhussein/visco/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/akramhussein/visco">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/akramhussein/visco/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/akramhussein/visco/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
         <h2>
 <a name="background" class="anchor" href="#background"><span class="octicon octicon-link"></span></a>Background</h2>
 
@@ -82,6 +85,8 @@
 <h2>
 <a name="classes" class="anchor" href="#classes"><span class="octicon octicon-link"></span></a>Classes</h2>
 
+<p>The following classes represent the key componenets of Visco and can be found in src.mapred.visco.*.</p>
+
 <p><code>MergingTree</code> - a binary tree structure that is one of the core classes of our framework. It implements the algorithm for building the tree structure. The main functionality of this class is to associate the different channels with the merging tasks. The merging tasks exist only in the root of each subtree in the tree. Thus, the leaf nodes of the tree contain channels but the intermediate nodes and the root of the tree contain both channels and merging tasks.</p>
 
 <p><code>MergingTask</code> - a thread, which takes data from two input buffers with sorted data and stores the results in a third buffer that is passed to the next level through the Merging-Tree structure. Moreover, it iterates over the data of the two buffers and compares their key values and stores the smaller one in the output buffer, i.e. it sorts and forwards the data in the next level. Note that the input data are already sorted, hence only the smallest one has to be stored in the output buffer in each iteration.</p>
@@ -100,12 +105,17 @@
 
 <p><code>DiskIOChannel</code> - deprecated channel implementation that is used to read serialized data from the disk in the initial phase of the MergingTask. It is assigned to the leaf nodes of the Merging-Tree in order to access the input data for the reduce phase. This class was initially created in order to split the work between the team members in order for some members to able to work on the Merging-Tree implementation while the rest could carry out the network data transfer part of the project. As the Merging-Tree now reads directly from the network, this class is no longer used. </p>
       </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/akramhussein">akramhussein</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Visco maintained by <a href="https://github.com/akramhussein">akramhussein</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
+
     
+
   </body>
 </html>
