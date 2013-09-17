@@ -10,7 +10,7 @@ To introduce new functionality to the Hadoop codebase (version 1.0.1) that would
 
 ## Classes
 
-The following classes represent the key componenets of Visco and can be found in src.mapred.visco.*.
+The following classes represent the key componenets of Visco and can be found in `src.mapred.visco.*`.
 
 `MergingTree` - a binary tree structure that is one of the core classes of our framework. It implements the algorithm for building the tree structure. The main functionality of this class is to associate the different channels with the merging tasks. The merging tasks exist only in the root of each subtree in the tree. Thus, the leaf nodes of the tree contain channels but the intermediate nodes and the root of the tree contain both channels and merging tasks.
 
